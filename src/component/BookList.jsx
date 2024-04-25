@@ -1,21 +1,28 @@
-import { Col, Container, Form, Row } from "react-bootstrap"
+import { Button, Col, Container, Form, Row } from "react-bootstrap"
 
 import fantasy from "../data/fantasy.json"
+import history from "../data/history.json"
+import scifi from "../data/scifi.json"
+import romance from "../data/romance.json"
 import SingleBook from "./SingleBook"
 import { Component } from "react"
 
 class BookList extends Component {
     state = {
-        searchbar: ""
+        searchbar: "",
+        categorySelected: fantasy
     };
     render( ) { 
-        const filteredBooks = fantasy.filter(book =>
+        const filteredBooks = this.state.categorySelected.filter(book =>
             book.title.toLowerCase().includes(this.state.searchbar.toLowerCase())
         );
 return(
     <Container> 
-    <Row className="justify-content-center my-5">
-    <Col xs={12} md={4} className="text-center">
+        <Button onClick={() => this.setState({ categorySelected: fantasy })}>Fantasy</Button>
+        <Button onClick={() => this.setState({ categorySelected: history })}>History</Button>
+        <Button onClick={() => this.setState({ categorySelected: scifi })}>Scifi</Button>
+        <Button onClick={() => this.setState({ categorySelected: romance})}>Romance</Button>
+
       <Form.Group>
         <Form.Control
           type="search"
@@ -24,13 +31,12 @@ return(
           onChange={(e) => this.setState({ searchbar: e.target.value })}
         />
       </Form.Group>
-    </Col>
-  </Row>
   
-        <Row>
-            {filteredBooks.map((book)=> {
-                return(<Col xs={12} md={4} key={book.asin}> 
-                <SingleBook src={book.img} title={book.title}/></Col>)
+  
+        <Row className="gy-3">
+            {filteredBooks.map((singleBook)=> {
+                return(<Col xs={12} md={4} key={singleBook.asin}> 
+                <SingleBook book={singleBook}/></Col>)
             })}
         </Row>
     </Container>
